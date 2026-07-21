@@ -92,7 +92,7 @@ input:focus-visible + .switch-track {
 
 .brand-block h1 {
   margin: 0;
-  font-size: clamp(1.85rem, 3.5vw, 3.5rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.8rem);
   font-weight: 850;
   letter-spacing: -0.055em;
   line-height: 0.98;
