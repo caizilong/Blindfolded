@@ -270,6 +270,13 @@ function analyzePieceType(stickers, options) {
     throw new Error("缓冲块方向无法识别");
   }
 
+  // Every disjoint edge cycle can return through the opposite sticker of its
+  // starting piece. That flip is absorbed by the buffer while the cycle is
+  // solved, so CE is flipped only when an odd number of cycles close this way.
+  // Looking at the buffer cycle alone can therefore produce an impossible odd
+  // number of final edge flips.
+  let edgeBufferFlipped = type === 2 && closure.code !== anchorCode;
+
   const permutedPieces = [...groups.entries()]
     .filter(([piece, group]) => piece !== bufferPiece && !isPieceInHomePosition(group, currentSlots))
     .map(([piece]) => piece);
@@ -294,6 +301,9 @@ function analyzePieceType(stickers, options) {
       sequence.push(occupant.code);
       visitedPieces.add(occupant.homePiece);
       if (occupant.homePiece === start.homePiece) {
+        if (type === 2 && occupant.code !== start.code) {
+          edgeBufferFlipped = !edgeBufferFlipped;
+        }
         closed = true;
         break;
       }
@@ -328,16 +338,14 @@ function analyzePieceType(stickers, options) {
     }
   }
 
-  if (closure.code !== anchorCode) {
-    if (type === 2) {
-      orientationIssues.push({ piece: pieceLabels[bufferPiece], buffer: true });
-    } else {
-      orientationIssues.push({
-        piece: pieceLabels[bufferPiece],
-        direction: cornerDirection(anchor.homePosition, closure, anchor),
-        buffer: true,
-      });
-    }
+  if (type === 2 && edgeBufferFlipped) {
+    orientationIssues.push({ piece: pieceLabels[bufferPiece], buffer: true });
+  } else if (type === 3 && closure.code !== anchorCode) {
+    orientationIssues.push({
+      piece: pieceLabels[bufferPiece],
+      direction: cornerDirection(anchor.homePosition, closure, anchor),
+      buffer: true,
+    });
   }
 
   return {

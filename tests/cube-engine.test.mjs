@@ -10,6 +10,9 @@ import {
 const GOLDEN_SCRAMBLE =
   "L2 D F2 U D R2 D' B2 L2 R2 D' B2 F' L' R2 F2 L2 R' D2 F' R'";
 
+const MULTI_CYCLE_EDGE_SCRAMBLE =
+  "B L2 D2 F2 U2 B' F2 U2 F' D2 R2 F2 R B2 D L' D2 U F' R2 U2";
+
 test("matches the user's calibrated yellow-top red-front example", () => {
   const result = analyzeScramble(GOLDEN_SCRAMBLE);
 
@@ -33,6 +36,17 @@ test("returns an empty memo for a solved cube", () => {
   assert.equal(result.edgeParity, false);
   assert.deepEqual(result.edgeFlips, []);
   assert.deepEqual(result.cornerTwists, []);
+});
+
+test("combines edge orientation across every cycle before reporting the CE buffer", () => {
+  const result = analyzeScramble(MULTI_CYCLE_EDGE_SCRAMBLE);
+
+  assert.equal(result.edgeMemo, "PKYHARQLTO");
+  assert.deepEqual(result.edgeCycleBreaks, ["A"]);
+  assert.deepEqual(result.edgeFlips, [
+    { piece: "XM", buffer: false },
+    { piece: "SZ", buffer: false },
+  ]);
 });
 
 test("normalizes whitespace and unicode primes", () => {
@@ -79,6 +93,7 @@ test("keeps every random move-sequence state color-valid and bounded", () => {
       assert.equal(counts[color].length, 9);
     }
     assert.equal(result.edgeParity, result.edgeMemo.length % 2 === 1);
+    assert.equal(result.edgeFlips.length % 2, 0);
     assert.ok(result.edgeMemo.length <= 24);
     assert.ok(result.cornerMemo.length <= 23);
     assert.equal(new Set(result.edgeCycleBreaks).size, result.edgeCycleBreaks.length);
