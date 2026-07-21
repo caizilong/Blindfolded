@@ -13,6 +13,9 @@ const GOLDEN_SCRAMBLE =
 const MULTI_CYCLE_EDGE_SCRAMBLE =
   "B L2 D2 F2 U2 B' F2 U2 F' D2 R2 F2 R B2 D L' D2 U F' R2 U2";
 
+const MULTI_CYCLE_CORNER_SCRAMBLE =
+  "B U2 L B2 F2 D2 L B2 L' F2 R' B2 L U R B F L' B F";
+
 test("matches the user's calibrated yellow-top red-front example", () => {
   const result = analyzeScramble(GOLDEN_SCRAMBLE);
 
@@ -47,6 +50,14 @@ test("combines edge orientation across every cycle before reporting the CE buffe
     { piece: "XM", buffer: false },
     { piece: "SZ", buffer: false },
   ]);
+});
+
+test("combines corner orientation across every cycle before reporting the EDM buffer", () => {
+  const result = analyzeScramble(MULTI_CYCLE_CORNER_SCRAMBLE);
+
+  assert.equal(result.cornerMemo, "IPCQBTO");
+  assert.deepEqual(result.cornerCycleBreaks, ["B"]);
+  assert.deepEqual(result.cornerTwists, []);
 });
 
 test("normalizes whitespace and unicode primes", () => {
@@ -94,6 +105,13 @@ test("keeps every random move-sequence state color-valid and bounded", () => {
     }
     assert.equal(result.edgeParity, result.edgeMemo.length % 2 === 1);
     assert.equal(result.edgeFlips.length % 2, 0);
+    assert.equal(
+      result.cornerTwists.reduce(
+        (sum, issue) => sum + (issue.direction === "顺时针" ? 1 : 2),
+        0,
+      ) % 3,
+      0,
+    );
     assert.ok(result.edgeMemo.length <= 24);
     assert.ok(result.cornerMemo.length <= 23);
     assert.equal(new Set(result.edgeCycleBreaks).size, result.edgeCycleBreaks.length);

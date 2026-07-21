@@ -241,6 +241,12 @@ function cornerDirection(piecePosition, originalSticker, targetSlot) {
   return signedTurn > 0 ? "顺时针" : "逆时针";
 }
 
+function cornerTwistAmount(piecePosition, originalSticker, targetSlot) {
+  return cornerDirection(piecePosition, originalSticker, targetSlot) === "顺时针"
+    ? 1
+    : 2;
+}
+
 function analyzePieceType(stickers, options) {
   const { type, anchorCode, bufferCodes, pieceLabels } = options;
   const currentSlots = makeCurrentSlotMap(stickers);
@@ -276,6 +282,10 @@ function analyzePieceType(stickers, options) {
   // Looking at the buffer cycle alone can therefore produce an impossible odd
   // number of final edge flips.
   let edgeBufferFlipped = type === 2 && closure.code !== anchorCode;
+  let cornerBufferTwist =
+    type === 3 && closure.code !== anchorCode
+      ? cornerTwistAmount(anchor.homePosition, closure, anchor)
+      : 0;
 
   const permutedPieces = [...groups.entries()]
     .filter(([piece, group]) => piece !== bufferPiece && !isPieceInHomePosition(group, currentSlots))
@@ -303,6 +313,12 @@ function analyzePieceType(stickers, options) {
       if (occupant.homePiece === start.homePiece) {
         if (type === 2 && occupant.code !== start.code) {
           edgeBufferFlipped = !edgeBufferFlipped;
+        }
+        if (type === 3 && occupant.code !== start.code) {
+          cornerBufferTwist =
+            (cornerBufferTwist +
+              cornerTwistAmount(start.homePosition, occupant, start)) %
+            3;
         }
         closed = true;
         break;
@@ -340,10 +356,10 @@ function analyzePieceType(stickers, options) {
 
   if (type === 2 && edgeBufferFlipped) {
     orientationIssues.push({ piece: pieceLabels[bufferPiece], buffer: true });
-  } else if (type === 3 && closure.code !== anchorCode) {
+  } else if (type === 3 && cornerBufferTwist !== 0) {
     orientationIssues.push({
       piece: pieceLabels[bufferPiece],
-      direction: cornerDirection(anchor.homePosition, closure, anchor),
+      direction: cornerBufferTwist === 1 ? "顺时针" : "逆时针",
       buffer: true,
     });
   }
