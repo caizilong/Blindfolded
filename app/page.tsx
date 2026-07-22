@@ -183,7 +183,8 @@ export default function Home() {
       setAnalysis(next);
       setRevealed(false);
       setNotice("新题已生成");
-    } catch {
+    } catch (caught) {
+      console.error("Failed to generate a random 3x3 scramble", caught);
       setError("随机状态生成器暂时不可用，请重试或粘贴一条打乱公式。");
     } finally {
       setBusy(false);

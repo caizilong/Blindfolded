@@ -43,6 +43,10 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    // cubing.js starts its scramble solver from a module worker. Vite's
+    // module-preload helper accesses `document`, which does not exist inside
+    // that worker, so leave dynamic chunks to the native module loader.
+    build: { modulePreload: false },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,
