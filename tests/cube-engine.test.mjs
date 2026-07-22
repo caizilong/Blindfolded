@@ -69,9 +69,9 @@ test("rejects unsupported notation", () => {
   assert.throws(() => normalizeScramble("R3"), /R3/);
 });
 
-test("the parity Jb has no leading U prime", () => {
-  assert.equal(JB_PERM, "R U R' F' R U R' U' R' F R2 U' R'");
-  assert.equal(JB_PERM.startsWith("U'"), false);
+test("the parity Jb includes the leading U prime", () => {
+  assert.equal(JB_PERM, "U' R U R' F' R U R' U' R' F R2 U' R'");
+  assert.equal(JB_PERM.startsWith("U'"), true);
 });
 
 test("keeps every random move-sequence state color-valid and bounded", () => {

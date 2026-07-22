@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   FACE_LABELS,
@@ -134,7 +135,7 @@ function answerText(analysis: MemoAnalysis) {
   return [
     `打乱：${analysis.scramble || "空打乱"}`,
     `棱块编码：${analysis.edgeMemo || "已复原"}`,
-    `棱块奇偶：${analysis.edgeParity ? "奇数，棱块完成后直接做一次 Jb（无前置 U'）" : "偶数，无需额外 Jb"}`,
+    `棱块奇偶：${analysis.edgeParity ? "奇数，棱块完成后做一次完整 Jb" : "偶数，无需额外 Jb"}`,
     `角块编码：${analysis.cornerMemo || "已复原"}`,
     `翻棱：${edgeFlips}`,
     `扭角：${cornerTwists}`,
@@ -208,11 +209,16 @@ export default function Home() {
           <h1>三阶盲拧编码训练器</h1>
           <p>固定 CE / EDM 缓冲，打乱、观察、编码全程黄顶红前。</p>
         </div>
-        <div className="orientation-badge" aria-label="固定方向：黄顶红前">
-          <span className="yellow-dot" />
-          黄顶
-          <span className="red-dot" />
-          红前
+        <div className="header-actions">
+          <Link className="reference-link" href="/reference">
+            公式参考
+          </Link>
+          <div className="orientation-badge" aria-label="固定方向：黄顶红前">
+            <span className="yellow-dot" />
+            黄顶
+            <span className="red-dot" />
+            红前
+          </div>
         </div>
       </header>
 
