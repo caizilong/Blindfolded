@@ -187,7 +187,7 @@ https://cube.coisinic.com
 https://blindfolded-cube-trainer.coisinic243.workers.dev
 ```
 
-完整的域名、CI/CD 和回滚说明见 `/home/pi/czl/deploy.md`。
+GitHub Actions 部署需要配置 `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_API_TOKEN` Secrets；本机部署与回滚步骤记录在工作区根目录的 `deploy.md`。
 
 ## 技术栈
 
