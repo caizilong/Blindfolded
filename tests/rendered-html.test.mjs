@@ -44,10 +44,12 @@ test("server renders the formula reference as real HTML", async () => {
   const html = await response.text();
   assert.match(html, /<title>盲拧公式参考手册<\/title>/i);
   assert.match(html, /魔方编码/);
-  assert.match(html, /Jb Perm 与翻色/);
+  assert.match(html, /Jb Perm/);
+  assert.match(html, />翻色</);
   assert.match(html, /Setup 公式/);
   assert.match(html, /U(&#x27;|') \(R U R(&#x27;|') F(&#x27;|')\)/);
   assert.match(html, /F2 U(&#x27;|') F2/);
   assert.match(html, /E(&#x27;|') L E(&#x27;|')2 L(&#x27;|')/);
+  assert.doesNotMatch(html, /奇偶处理使用完整公式/);
   assert.doesNotMatch(html, /codex-clipboard|\.xlsx|<img\b/i);
 });

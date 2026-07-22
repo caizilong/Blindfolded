@@ -780,11 +780,18 @@ input:focus-visible + .switch-track {
   background: var(--panel);
 }
 
-.reference-overview-grid {
+.reference-page-grid {
   display: grid;
-  grid-template-columns: minmax(400px, 0.88fr) minmax(520px, 1.12fr);
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
   gap: 18px;
-  align-items: stretch;
+  align-items: start;
+}
+
+.reference-left-column {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .reference-panel {
@@ -804,7 +811,6 @@ input:focus-visible + .switch-track {
 
 .reference-cube-stage {
   min-height: 0;
-  height: calc(100% - 50px);
   padding: 42px 10px 24px;
 }
 
@@ -850,13 +856,6 @@ input:focus-visible + .switch-track {
   background: #fff4ec;
 }
 
-.jb-formula-card p {
-  margin: 9px 0 0;
-  color: var(--muted);
-  font-size: 0.74rem;
-  line-height: 1.55;
-}
-
 .edge-flip-card {
   border-left: 5px solid var(--blue);
   background: #eff6ff;
@@ -874,13 +873,7 @@ input:focus-visible + .switch-track {
 }
 
 .setup-panel {
-  margin-top: 18px;
-}
-
-.setup-table-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  min-width: 0;
 }
 
 .setup-table-shell {
@@ -953,12 +946,8 @@ input:focus-visible + .switch-track {
     grid-template-columns: 1fr;
   }
 
-  .reference-overview-grid {
+  .reference-page-grid {
     grid-template-columns: 1fr;
-  }
-
-  .reference-cube-stage {
-    height: auto;
   }
 
   .cube-stage {
@@ -1058,8 +1047,7 @@ input:focus-visible + .switch-track {
     padding: 42px 2px 18px;
   }
 
-  .corner-flip-grid,
-  .setup-table-grid {
+  .corner-flip-grid {
     grid-template-columns: 1fr;
   }
 
