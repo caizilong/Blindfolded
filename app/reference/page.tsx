@@ -110,7 +110,6 @@ export default function ReferencePage() {
                 <span className="section-number">01</span>
                 <h2 id="reference-cube-heading">魔方编码</h2>
               </div>
-              <span className="reference-caption">黄顶红前</span>
             </div>
             <div className="cube-stage reference-cube-stage">
               <div className="orientation-axis" aria-hidden="true">
@@ -171,7 +170,6 @@ export default function ReferencePage() {
               <span className="section-number">04</span>
               <h2 id="setup-heading">Setup 公式</h2>
             </div>
-            <span className="reference-caption">棱块 / 角块</span>
           </div>
           <SetupTable label="全部位置" rows={SETUP_ROWS} />
         </section>
