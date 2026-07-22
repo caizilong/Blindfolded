@@ -75,7 +75,7 @@ const CORNER_LABELS = {
 
 export const EDGE_BUFFER = "CE";
 export const CORNER_BUFFER = "EDM";
-export const JB_PERM = "R U R' F' R U R' U' R' F R2 U' R'";
+export const JB_PERM = "U' R U R' F' R U R' U' R' F R2 U' R'";
 
 function vectorKey(vector) {
   return vector.join(",");
