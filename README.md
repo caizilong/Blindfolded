@@ -53,7 +53,7 @@ corepack prepare pnpm@11.9.0 --activate
 进入项目目录：
 
 ```bash
-cd /Users/caizilong/Blindfolded
+cd /home/pi/czl/projects/Blindfolded
 ```
 
 首次运行时安装依赖：
@@ -167,10 +167,27 @@ pnpm db:generate
 建议在提交代码前执行完整检查：
 
 ```bash
-pnpm build
-pnpm test
-pnpm lint
+pnpm check
 ```
+
+## Cloudflare 部署
+
+先确认 Wrangler 当前登录账户，再执行完整检查和部署：
+
+```bash
+pnpm exec wrangler whoami
+pnpm check
+pnpm deploy
+```
+
+当前正式地址和备用地址为：
+
+```text
+https://cube.coisinic.com
+https://blindfolded-cube-trainer.coisinic243.workers.dev
+```
+
+完整的域名、CI/CD 和回滚说明见 `/home/pi/czl/deploy.md`。
 
 ## 技术栈
 
