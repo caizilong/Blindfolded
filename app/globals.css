@@ -50,7 +50,7 @@ button {
 
 button:focus-visible,
 textarea:focus-visible,
-input:focus-visible + .switch-track {
+input:focus-visible+.switch-track {
   outline: 3px solid rgba(31, 111, 235, 0.34);
   outline-offset: 3px;
 }
@@ -192,7 +192,7 @@ input:focus-visible + .switch-track {
   margin-bottom: 17px;
 }
 
-.panel-heading-row > div:first-child {
+.panel-heading-row>div:first-child {
   display: flex;
   align-items: baseline;
   gap: 10px;
@@ -351,11 +351,11 @@ input:focus-visible + .switch-track {
   transition: transform 160ms ease;
 }
 
-.switch-control input:checked + .switch-track {
+.switch-control input:checked+.switch-track {
   background: var(--lime);
 }
 
-.switch-control input:checked + .switch-track span {
+.switch-control input:checked+.switch-track span {
   transform: translateX(16px);
 }
 
@@ -460,12 +460,31 @@ input:focus-visible + .switch-track {
   font-weight: 900;
 }
 
-.color-yellow { background: var(--yellow); }
-.color-white { background: var(--white); }
-.color-red { background: var(--red); color: white; }
-.color-orange { background: var(--orange); }
-.color-green { background: var(--green); }
-.color-blue { background: var(--blue); color: white; }
+.color-yellow {
+  background: var(--yellow);
+}
+
+.color-white {
+  background: var(--white);
+}
+
+.color-red {
+  background: var(--red);
+  color: white;
+}
+
+.color-orange {
+  background: var(--orange);
+}
+
+.color-green {
+  background: var(--green);
+}
+
+.color-blue {
+  background: var(--blue);
+  color: white;
+}
 
 .center-mark {
   display: grid;
@@ -512,7 +531,7 @@ input:focus-visible + .switch-track {
     flex-direction: column;
   }
 
-  .answer-panel.is-covered > .panel-heading-row {
+  .answer-panel.is-covered>.panel-heading-row {
     margin-bottom: 17px;
   }
 
@@ -554,9 +573,20 @@ input:focus-visible + .switch-track {
   transform: translate(-50%, -50%);
 }
 
-.cover-rings span:nth-child(1) { width: 180px; height: 180px; }
-.cover-rings span:nth-child(2) { width: 320px; height: 320px; }
-.cover-rings span:nth-child(3) { width: 480px; height: 480px; }
+.cover-rings span:nth-child(1) {
+  width: 180px;
+  height: 180px;
+}
+
+.cover-rings span:nth-child(2) {
+  width: 320px;
+  height: 320px;
+}
+
+.cover-rings span:nth-child(3) {
+  width: 480px;
+  height: 480px;
+}
 
 .answer-content {
   display: flex;
@@ -564,7 +594,7 @@ input:focus-visible + .switch-track {
   gap: 8px;
 }
 
-.answer-panel > .panel-heading-row {
+.answer-panel>.panel-heading-row {
   margin-bottom: 13px;
 }
 
@@ -596,7 +626,7 @@ input:focus-visible + .switch-track {
   margin-bottom: 9px;
 }
 
-.step-title-row > div:first-child {
+.step-title-row>div:first-child {
   display: flex;
   align-items: baseline;
   gap: 9px;
@@ -782,7 +812,7 @@ input:focus-visible + .switch-track {
 
 .reference-page-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
   gap: 18px;
   align-items: start;
 }
@@ -835,9 +865,9 @@ input:focus-visible + .switch-track {
   display: block;
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
-  font-size: clamp(0.8rem, 1.4vw, 0.98rem);
+  font-size: clamp(0.92rem, 1.7vw, 1.08rem);
   font-weight: 760;
-  line-height: 1.75;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -845,7 +875,7 @@ input:focus-visible + .switch-track {
   display: block;
   margin-bottom: 9px;
   color: var(--muted);
-  font-size: 0.69rem;
+  font-size: 0.78rem;
   font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -891,18 +921,18 @@ input:focus-visible + .switch-track {
 
 .setup-table th,
 .setup-table td {
-  height: 50px;
-  padding: 9px 12px;
+  height: 42px;
+  padding: 8px 10px;
   border-right: 1px solid rgba(39, 39, 31, 0.45);
   border-bottom: 1px solid rgba(39, 39, 31, 0.45);
   text-align: center;
 }
 
-.setup-table tr > :last-child {
+.setup-table tr> :last-child {
   border-right: 0;
 }
 
-.setup-table tbody tr:last-child > * {
+.setup-table tbody tr:last-child>* {
   border-bottom: 0;
 }
 
@@ -935,9 +965,9 @@ input:focus-visible + .switch-track {
 .setup-table code {
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
-  font-size: clamp(0.69rem, 1.15vw, 0.83rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
   font-weight: 720;
-  line-height: 1.45;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
@@ -1064,6 +1094,7 @@ input:focus-visible + .switch-track {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

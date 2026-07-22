@@ -133,7 +133,7 @@ export default function ReferencePage() {
               </div>
             </div>
             <article className="formula-card jb-formula-card">
-              <span className="formula-label">PLL Jb Perm</span>
+              <span className="formula-label">公式</span>
               <code>{JB_PERM_REFERENCE}</code>
             </article>
           </section>
