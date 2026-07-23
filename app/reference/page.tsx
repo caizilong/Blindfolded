@@ -174,6 +174,33 @@ export default function ReferencePage() {
           <SetupTable label="全部位置" rows={SETUP_ROWS} />
         </section>
       </div>
+
+      <section className="reference-sources" aria-labelledby="sources-heading">
+        <div>
+          <span className="section-number">参考</span>
+          <h2 id="sources-heading">延伸资料</h2>
+        </div>
+        <div className="source-link-list">
+          <a
+            href="https://www.bilibili.com/video/BV1jm9eBoEgA/?spm_id_from=333.337.search-card.all.click&vd_source=1d9fd5b806df82bffcb81d678062e224"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <span>Bilibili</span>
+            <strong>盲拧参考视频</strong>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href="https://www.lyt0112.com/blog/blindfold-zh"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <span>Yutong&apos;s Site</span>
+            <strong>Rubik&apos;s Cube Blindfold</strong>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FACE_LABELS,
   FACE_ORDER,
@@ -14,6 +14,21 @@ import {
 
 const CALIBRATION_SCRAMBLE =
   "L2 D F2 U D R2 D' B2 L2 R2 D' B2 F' L' R2 F2 L2 R' D2 F' R'";
+const MAX_HISTORY_LENGTH = 50;
+
+type ScrambleModule = typeof import("cubing/scramble");
+
+let scrambleModulePromise: Promise<ScrambleModule> | null = null;
+
+function loadScrambleModule() {
+  if (!scrambleModulePromise) {
+    scrambleModulePromise = import("cubing/scramble").catch((error) => {
+      scrambleModulePromise = null;
+      throw error;
+    });
+  }
+  return scrambleModulePromise;
+}
 
 function CubeFace({
   face,
@@ -149,6 +164,7 @@ export default function Home() {
   );
   const [revealed, setRevealed] = useState(false);
   const [showLetters, setShowLetters] = useState(false);
+  const [history, setHistory] = useState<MemoAnalysis[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -158,14 +174,29 @@ export default function Home() {
     [analysis.scramble],
   );
 
+  useEffect(() => {
+    void loadScrambleModule().catch(() => {
+      // The button will retry and surface a user-facing error if preloading fails.
+    });
+  }, []);
+
+  function applyAnalysis(next: MemoAnalysis, nextNotice = "") {
+    if (next.scramble !== analysis.scramble) {
+      setHistory((previous) =>
+        [...previous, analysis].slice(-MAX_HISTORY_LENGTH),
+      );
+    }
+    setAnalysis(next);
+    setInput(next.scramble);
+    setRevealed(false);
+    setError("");
+    setNotice(nextNotice);
+  }
+
   function applyInput() {
     try {
       const next = analyzeScramble(input);
-      setAnalysis(next);
-      setInput(next.scramble);
-      setRevealed(false);
-      setError("");
-      setNotice("");
+      applyAnalysis(next);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "打乱公式有误");
       setNotice("");
@@ -177,19 +208,28 @@ export default function Home() {
     setError("");
     setNotice("");
     try {
-      const { randomScrambleForEvent } = await import("cubing/scramble");
+      const { randomScrambleForEvent } = await loadScrambleModule();
       const scramble = (await randomScrambleForEvent("333")).toString();
       const next = analyzeScramble(scramble);
-      setInput(next.scramble);
-      setAnalysis(next);
-      setRevealed(false);
-      setNotice("新题已生成");
+      applyAnalysis(next, "新公式已生成");
     } catch (caught) {
       console.error("Failed to generate a random 3x3 scramble", caught);
       setError("随机状态生成器暂时不可用，请重试或粘贴一条打乱公式。");
     } finally {
       setBusy(false);
     }
+  }
+
+  function previousScramble() {
+    const previous = history.at(-1);
+    if (!previous) return;
+
+    setHistory(history.slice(0, -1));
+    setInput(previous.scramble);
+    setAnalysis(previous);
+    setRevealed(false);
+    setError("");
+    setNotice("已回到上一个公式");
   }
 
   async function copy(value: string, successMessage: string) {
@@ -213,12 +253,6 @@ export default function Home() {
           <Link className="reference-link" href="/reference">
             公式参考
           </Link>
-          <div className="orientation-badge" aria-label="固定方向：黄顶红前">
-            <span className="yellow-dot" />
-            黄顶
-            <span className="red-dot" />
-            红前
-          </div>
         </div>
       </header>
 
@@ -244,9 +278,16 @@ export default function Home() {
         />
         <div className="scramble-actions">
           <button className="button primary-button" onClick={nextScramble} disabled={busy}>
-            {busy ? "正在生成…" : "随机下一题"}
+            {busy ? "正在生成…" : "随机下一个公式"}
           </button>
-          <button className="button secondary-button" onClick={applyInput}>
+          <button
+            className="button history-button"
+            disabled={busy || history.length === 0}
+            onClick={previousScramble}
+          >
+            回看上一个公式
+          </button>
+          <button className="button secondary-button" disabled={busy} onClick={applyInput}>
             应用公式
           </button>
           <button
