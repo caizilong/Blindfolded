@@ -202,6 +202,11 @@ input:focus-visible+.switch-track {
   line-height: 1.55;
 }
 
+#scramble-input:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
 .scramble-actions {
   display: flex;
   align-items: center;

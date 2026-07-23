@@ -33,6 +33,7 @@ test("server renders the blindfolded training desk", async () => {
   assert.match(html, /黄顶红前/);
   assert.match(html, /随机下一个公式/);
   assert.match(html, /回看上一个公式/);
+  assert.match(html, /正在生成随机公式/);
   assert.match(html, /揭晓答案/);
   assert.match(html, /公式参考/);
   assert.doesNotMatch(html, /orientation-badge/);

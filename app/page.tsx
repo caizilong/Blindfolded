@@ -12,8 +12,6 @@ import {
   type OrientationIssue,
 } from "./cube-engine.mjs";
 
-const CALIBRATION_SCRAMBLE =
-  "L2 D F2 U D R2 D' B2 L2 R2 D' B2 F' L' R2 F2 L2 R' D2 F' R'";
 const MAX_HISTORY_LENGTH = 50;
 
 type ScrambleModule = typeof import("cubing/scramble");
@@ -28,6 +26,12 @@ function loadScrambleModule() {
     });
   }
   return scrambleModulePromise;
+}
+
+async function createRandomAnalysis() {
+  const { randomScrambleForEvent } = await loadScrambleModule();
+  const scramble = (await randomScrambleForEvent("333")).toString();
+  return analyzeScramble(scramble);
 }
 
 function CubeFace({
@@ -158,14 +162,12 @@ function answerText(analysis: MemoAnalysis) {
 }
 
 export default function Home() {
-  const [input, setInput] = useState(CALIBRATION_SCRAMBLE);
-  const [analysis, setAnalysis] = useState<MemoAnalysis>(() =>
-    analyzeScramble(CALIBRATION_SCRAMBLE),
-  );
+  const [input, setInput] = useState("");
+  const [analysis, setAnalysis] = useState<MemoAnalysis>(() => analyzeScramble(""));
   const [revealed, setRevealed] = useState(false);
   const [showLetters, setShowLetters] = useState(false);
   const [history, setHistory] = useState<MemoAnalysis[]>([]);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
@@ -175,9 +177,27 @@ export default function Home() {
   );
 
   useEffect(() => {
-    void loadScrambleModule().catch(() => {
-      // The button will retry and surface a user-facing error if preloading fails.
-    });
+    let active = true;
+
+    void createRandomAnalysis()
+      .then((next) => {
+        if (!active) return;
+        setInput(next.scramble);
+        setAnalysis(next);
+        setError("");
+      })
+      .catch((caught) => {
+        if (!active) return;
+        console.error("Failed to generate the initial random 3x3 scramble", caught);
+        setError("初始随机公式生成失败，请点击“随机下一个公式”重试。");
+      })
+      .finally(() => {
+        if (active) setBusy(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   function applyAnalysis(next: MemoAnalysis, nextNotice = "") {
@@ -208,9 +228,7 @@ export default function Home() {
     setError("");
     setNotice("");
     try {
-      const { randomScrambleForEvent } = await loadScrambleModule();
-      const scramble = (await randomScrambleForEvent("333")).toString();
-      const next = analyzeScramble(scramble);
+      const next = await createRandomAnalysis();
       applyAnalysis(next, "新公式已生成");
     } catch (caught) {
       console.error("Failed to generate a random 3x3 scramble", caught);
@@ -268,16 +286,23 @@ export default function Home() {
           打乱公式
         </label>
         <textarea
+          disabled={busy}
           id="scramble-input"
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
             if ((event.metaKey || event.ctrlKey) && event.key === "Enter") applyInput();
           }}
+          placeholder={busy ? "正在生成随机公式…" : "输入打乱公式"}
           spellCheck={false}
           value={input}
         />
         <div className="scramble-actions">
-          <button className="button primary-button" onClick={nextScramble} disabled={busy}>
+          <button
+            aria-label="随机下一个公式"
+            className="button primary-button"
+            disabled={busy}
+            onClick={nextScramble}
+          >
             {busy ? "正在生成…" : "随机下一个公式"}
           </button>
           <button
